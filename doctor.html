@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Doctor</title>
+    <link rel="stylesheet" href="compounder.css">
+</head>
+
+<body>
+    <div id="login-form" class="login-page">
+        <div class="form-box">
+            <div class="button-box">
+                <div id="btn"></div>
+                <button type="button" onclick="login()" class="toggle-btn">Log In</button>
+                <button type="button" onclick="register()" class="toggle-btn">Register</button>
+            </div>
+            <form id="login" class="input-group-login">
+                <input type="email" id="login-email" class="input-field" placeholder="Email Id" required>
+                <input type="password" id="login-password" class="input-field" placeholder="Enter password" required>
+                <input type="checkbox" class="check-box"><span>Remember password</span>
+                <label id="forgot-password"><a href="#">Forgot password?</a></label>
+                <button type="button" id="signin" class="submit-btn">Log in</button>
+            </form>
+            <form id="register" class="input-group-register">
+                <input type="text" class="input-field" id="register-firstname" placeholder="First name" required>
+                <input type="text" class="input-field" id="register-lastname" placeholder="Last name" required>
+                <input type="email" class="input-field" id="register-email" placeholder="Email Id" required>
+                <input type="password" class="input-field" id="register-password" placeholder="Password" required>
+                <input type="password" class="input-field" id="register-confirm-password" placeholder="Confirm Password"
+                    required>
+                <input type="checkbox" class="check-box"><span>I agree to the terms and conditions</span>
+                <button type="button" id="signup" class="submit-btn">Register</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Include the Firebase SDK using the classic script tag approach -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-analytics.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+
+    <script>
+        // Your existing Firebase initialization and event listener code
+        const firebaseConfig = {
+            apiKey: "AIzaSyAYx9gei5puGzEwpf07fOlNK7Oql_wnP8g",
+  authDomain: "clinic-management-system-b169d.firebaseapp.com",
+  projectId: "clinic-management-system-b169d",
+  storageBucket: "clinic-management-system-b169d.appspot.com",
+  messagingSenderId: "192757737318",
+  appId: "1:192757737318:web:2d016aca72bcae186b8aa7",
+  measurementId: "G-9BSXBNBX0W"
+        };
+
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+        firebase.analytics();
+        const database = firebase.database();
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const usersRef = db.collection("doctor");
+
+        // Forgot password functionality
+        document.getElementById("forgot-password").addEventListener("click", () => {
+            const email = document.getElementById("login-email").value;
+            firebase.auth().sendPasswordResetEmail(email)
+                .then(() => {
+                    alert("A password reset link has been sent to your email address.");
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        });
+
+        // Login functionality
+        document.getElementById("signin").addEventListener("click", () => {
+            const email = document.getElementById("login-email").value;
+            const password = document.getElementById("login-password").value;
+            firebase.auth().signInWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    window.location.href = "doctor1.html";
+                    alert("User Logged In Successfully!");
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        });
+
+        // Registration functionality
+        document.getElementById("signup").addEventListener("click", (e) => {
+            e.preventDefault();
+            const firstName = document.getElementById("register-firstname").value;
+            const lastName = document.getElementById("register-lastname").value;
+            const email = document.getElementById("register-email").value;
+            const password = document.getElementById("register-password").value;
+            const confirmPassword = document.getElementById("register-confirm-password").value;
+
+            if (password !== confirmPassword) {
+                alert("Passwords do not match.");
+                return;
+            }
+
+            firebase.auth().createUserWithEmailAndPassword(email, password)
+                .then((userCredential) => {
+                    const user = userCredential.user;
+                    usersRef.add({
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    database.ref("doctor/" + user.uid).set({
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                    });
+                    alert("Registered Successfully!");
+                })
+                .catch((error) => {
+                    alert(error.message);
+                });
+        });
+
+        // Toggle login/register form
+        function register() {
+            document.getElementById("login").style.left = "-400px";
+            document.getElementById("register").style.left = "50px";
+            document.getElementById("btn").style.left = "110px";
+        }
+
+        function login() {
+            document.getElementById("login").style.left = "50px";
+            document.getElementById("register").style.left = "450px";
+            document.getElementById("btn").style.left = "0px";
+        }
+    </script>
+</body>
+
+</html>

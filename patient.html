@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Patient Information Form</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<link rel="stylesheet" href="patient.css">
+<link rel="stylesheet" href="patient.css">
+
+<body>
+  <div class="container my-5">
+    <h1 class="text-center mb-4">Patient Information Form</h1>
+    <form id="patient-form">
+      <div class="form-group">
+        <label for="name">Patient Name</label>
+        <input type="text" class="form-control" id="name" required>
+      </div>
+      <div class="form-group">
+        <label for="age">Age</label>
+        <input type="number" class="form-control" id="age" required>
+      </div>
+      <div class="form-group">
+        <label for="illness">Illness</label>
+        <textarea class="form-control" id="illness" rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="feeling">How are you feeling?</label>
+        <textarea class="form-control" id="feeling" rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="medications">Previous Medications</label>
+        <textarea class="form-control" id="medications" rows="3" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="history">Patient History</label>
+        <textarea class="form-control" id="history" rows="4" required></textarea>
+      </div>
+      <button type="submit" class="btn btn-primary">Submit</button>
+    </form>
+  </div>
+
+  <!-- Bootstrap JS and jQuery -->
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  <!-- Firebase SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="patient-form.js"></script>
+</body>
+</html>

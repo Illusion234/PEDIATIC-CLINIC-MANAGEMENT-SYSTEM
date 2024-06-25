@@ -1,0 +1,73 @@
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Contact Us</title>
+  <link rel="stylesheet" href="contact.css">
+</head>
+<body>
+  <div class="contact-container">
+    <form action="https://api.web3forms.com/submit" method="POST" class="contact-left">
+      <div class="contact-left-title">
+        <h2>Get in Touch</h2>
+        <hr>
+      </div>
+      <input type="hidden" name="access_key" value="ed855c9d-b4d4-49c4-b2b7-8174a5431c71">
+      <input type="text" id="name" name="name" placeholder="Your name" class="contact-inputs" required>
+      <input type="email" id="email" name="email" placeholder="Your email" class="contact-inputs" required>
+      <textarea name="message" id="message" placeholder="Your Message" class="contact-inputs" required></textarea>
+      <button type="submit" id="submit">submit</button>
+    </form>
+    <div class="contact-right">
+      <img src="https://images.unsplash.com/photo-1596524430615-b46475ddff6e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8Y29udGFjdHxlbnwwfHwwfHx8MA%3D%3D">
+    </div>
+  </div>
+
+<script type="module">
+  import { initializeApp } from "firebase/app";
+  import { getAnalytics } from "firebase/analytics";
+  import { getFirestore, addDoc, collection } from 'firebase/firestore';
+
+  const firebaseConfig = {
+    apiKey: "AIzaSyAYx9gei5puGzEwpf07fOlNK7Oql_wnP8g",
+  authDomain: "clinic-management-system-b169d.firebaseapp.com",
+  projectId: "clinic-management-system-b169d",
+  storageBucket: "clinic-management-system-b169d.appspot.com",
+  messagingSenderId: "192757737318",
+  appId: "1:192757737318:web:2d016aca72bcae186b8aa7",
+  measurementId: "G-9BSXBNBX0W"
+  };
+
+  const app = initializeApp(firebaseConfig);
+  const db = getFirestore(app);
+
+  console.log('Firebase initialized.');
+
+  document.getElementById('submit').addEventListener('click', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const message = document.getElementById('message').value;
+
+    console.log('Submitting form data to Firestore...');
+
+    addDoc(collection(db, "contact_us"), {
+      name: name,
+      email: email,
+      message: message
+    })
+    .then(() => {
+      console.log('Mail sent successfully!');
+      alert('Mail sent successfully!');
+    })
+    .catch((error) => {
+      console.error("Error adding document: ", error);
+      alert('Error sending mail. Please try again later.');
+    });
+  });
+
+  console.log('Contact form script loaded.');
+</script>
+</body>
+</html>

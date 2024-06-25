@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Home</title>
+  <link rel="stylesheet" href="home.css">
+</head>
+
+<body>
+  <main>
+    <button id="logout-btn">Logout</button>
+    <h2>Book an Appointment</h2>
+    <form id="appointment-form">
+      <div>
+        <label for="patient-name">Patient Name:</label>
+        <input type="text" id="patient-name" required>
+      </div>
+      <div>
+        <label for="gender">Gender:</label>
+        <select id="gender" required>
+          <option value="">Select Gender</option>
+          <option value="male">Male</option>
+          <option value="female">Female</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+
+      <div>
+        <label for="height">Height (cm):</label>
+        <input type="number" id="height" min="0" max="250" required>
+      </div>
+
+      <div>
+        <label for="weight">Weight (kg):</label>
+        <input type="number" id="weight" min="0" max="200" required>
+      </div>
+
+      <div>
+        <label for="age">Age:</label>
+        <input type="number" id="age" min="1" max="120" required>
+      </div>
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" required>
+      </div>
+      <div>
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" required>
+      </div>
+      <div>
+        <label for="appointment-date">Appointment Date:</label>
+        <input type="date" id="appointment-date" required>
+      </div>
+      <div>
+        <label for="doctor">Doctor:</label>
+        <select id="doctor" required>
+          <option value="">Select a Doctor</option>
+          <option value="doctor1">Dr. Rohan Mate</option>
+          <option value="doctor2">Dr. Prakash Singh</option>
+          <!-- Add more doctor options as needed -->
+        </select>
+      </div>
+      <div>
+        <label for="reason">Reason for Appointment:</label>
+        <textarea id="reason" rows="3" required></textarea>
+      </div>
+      <button type="submit">Book Appointment</button>
+    </form>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <script>
+    // Your existing Firebase initialization and event listener code
+    const firebaseConfig = {
+      apiKey: "AIzaSyAYx9gei5puGzEwpf07fOlNK7Oql_wnP8g",
+  authDomain: "clinic-management-system-b169d.firebaseapp.com",
+  projectId: "clinic-management-system-b169d",
+  storageBucket: "clinic-management-system-b169d.appspot.com",
+  messagingSenderId: "192757737318",
+  appId: "1:192757737318:web:2d016aca72bcae186b8aa7",
+  measurementId: "G-9BSXBNBX0W"
+    };
+
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    const appointmentForm = document.getElementById('appointment-form');
+
+    appointmentForm.addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      // Get the form values
+      const patientName = document.getElementById('patient-name').value;
+      const gender = document.getElementById('gender').value;
+      const height = document.getElementById('height').value;
+      const weight = document.getElementById('weight').value;
+      const age = document.getElementById('age').value;
+      const email = document.getElementById('email').value;
+      const phone = document.getElementById('phone').value;
+      const appointmentDate = document.getElementById('appointment-date').value;
+      const doctor = document.getElementById('doctor').value;
+      const reason = document.getElementById('reason').value;
+
+      // Create a new appointment object
+      const appointmentData = {
+        patientName,
+        gender,
+        height,
+        weight,
+        age,
+        email,
+        phone,
+        appointmentDate,
+        doctor,
+        reason
+      };
+
+      // Add the appointment data to Firestore
+      db.collection('appointments').add(appointmentData)
+        .then(() => {
+          alert('Appointment booked successfully!');
+          appointmentForm.reset(); // Reset the form after successful submission
+        })
+        .catch((error) => {
+          alert('Error booking appointment: ' + error.message);
+        });
+    });
+    // Check if the user is logged in
+auth.onAuthStateChanged((user) => {
+  if (user) {
+    // User is logged in, allow access to the appointment form
+    showAppointmentForm();
+    showLogoutButton();
+  } else {
+    // User is not logged in, redirect to the login page
+    window.location.href = 'compounder.html';
+  }
+});
+
+// Function to show the appointment form
+function showAppointmentForm() {
+  const appointmentForm = document.getElementById('appointment-form');
+  appointmentForm.style.display = 'block';
+}
+
+// Function to show the logout button
+function showLogoutButton() {
+  
+  const logoutBtn = document.getElementById('logout-btn');
+  logoutBtn.style.display = 'block';
+  logoutBtn.addEventListener('click', logout);
+}
+
+// Logout function
+function logout() {
+  auth.signOut().then(() => {
+    // Sign-out successful
+    window.location.href = 'compounder.html';
+  }).catch((error) => {
+    // An error happened
+    console.error('Logout error:', error);
+  });
+}
+
+const appointment1Form = document.getElementById('appointment-form');
+
+appointmentForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+
+  // Get the form values
+  const patientName = document.getElementById('patient-name').value;
+  const gender = document.getElementById('gender').value;
+  const height = document.getElementById('height').value;
+  const weight = document.getElementById('weight').value;
+  const age = document.getElementById('age').value;
+  const email = document.getElementById('email').value;
+  const phone = document.getElementById('phone').value;
+  const appointmentDate = document.getElementById('appointment-date').value;
+  const doctor = document.getElementById('doctor').value;
+  const reason = document.getElementById('reason').value;
+
+  // Create a new appointment object
+  const appointmentData = {
+    patientName,
+    gender,
+    height,
+    weight,
+    age,
+    email,
+    phone,
+    appointmentDate,
+    doctor,
+    reason
+  };
+
+  // Add the appointment data to Firestore
+  db.collection('appointments').add(appointmentData)
+    .then(() => {
+      alert('Appointment booked successfully!');
+      appointmentForm.reset(); // Reset the form after successful submission
+
+      // Add the appointment data to Realtime Database
+      const newAppointmentRef = database.ref('appointments').push();
+      newAppointmentRef.set(appointmentData);
+    })
+    .catch((error) => {
+      alert('Error booking appointment: ' + error.message);
+    });
+});
+  </script>
+  
+</body>
+</html>

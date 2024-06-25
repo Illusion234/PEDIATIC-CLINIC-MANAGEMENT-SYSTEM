@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="doctor1.css">
+  <title>Doctor's View</title>
+  <style>
+    .appointment-card {
+      border: 1px solid #ccc;
+      padding: 10px;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Doctor's View</h1>
+  <div id="appointment-list"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-database.js"></script>
+
+  <script>
+    // Your Firebase initialization code
+    const firebaseConfig = {
+      apiKey: "AIzaSyAYx9gei5puGzEwpf07fOlNK7Oql_wnP8g",
+  authDomain: "https://clinic-management-system-b169d-default-rtdb.firebaseio.com/",
+  projectId: "clinic-management-system-b169d",
+  storageBucket: "clinic-management-system-b169d.appspot.com",
+  messagingSenderId: "192757737318",
+  appId: "1:192757737318:web:2d016aca72bcae186b8aa7",
+  measurementId: "G-9BSXBNBX0W"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    const database = firebase.database();
+
+    // Get a reference to the appointments node in the Realtime Database
+    const appointmentsRef = database.ref('appointments');
+
+    // Listen for child added events
+    appointmentsRef.on('child_added', (snapshot) => {
+      const appointmentData = snapshot.val();
+      displayAppointment(appointmentData);
+    });
+
+    // Function to display appointment data
+    function displayAppointment(appointmentData) {
+      const appointmentList = document.getElementById('appointment-list');
+      const appointmentDiv = document.createElement('div');
+      appointmentDiv.classList.add('appointment-card');
+
+      appointmentDiv.innerHTML = `
+        <h3>Patient Name: ${appointmentData.patientName}</h3>
+        <p>Gender: ${appointmentData.gender}</p>
+        <p>Height: ${appointmentData.height} cm</p>
+        <p>Weight: ${appointmentData.weight} kg</p>
+        <p>Age: ${appointmentData.age}</p>
+        <p>Email: ${appointmentData.email}</p>
+        <p>Phone: ${appointmentData.phone}</p>
+        <p>Appointment Date: ${appointmentData.appointmentDate}</p>
+        <p>Doctor: ${appointmentData.doctor}</p>
+        <p>Reason: ${appointmentData.reason}</p>
+      `;
+
+      appointmentList.appendChild(appointmentDiv);
+    }
+  </script>
+</body>
+</html>
